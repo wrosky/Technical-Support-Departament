@@ -4,7 +4,8 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User, Group
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
-from .form import RegisterCustomerForm, YourForm
+from .forms import RegisterCustomerForm, TicketForm
+from .models import User, Ticket
 
 def register_user(request):
     if request.method == 'POST':
@@ -37,15 +38,22 @@ def logout_user(request):
     return redirect('home')
 
 @login_required
-def form_user(request):
+def create_ticket(request):
     if request.method == 'POST':
-        form = YourForm(request.POST)
+        form = TicketForm(request.POST, request.FILES)
         if form.is_valid():
-            form.save()
-            return redirect('home')  # Zastąp 'home' nazwą widoku, do którego chcesz przekierować po zapisaniu formularza
+            ticket = form.save(commit=False)
+            ticket.author = request.user
+            ticket.save()
+            return redirect('customer_dashboard')  # Zastąp 'home' nazwą widoku, do którego chcesz przekierować po zapisaniu formularza
     else:
-        form = YourForm()
+        form = TicketForm()
     return render(request, 'form.html', {'form': form})
+
+@login_required
+def tickets_list(request):
+    tickets = Ticket.objects.filter(author=request.user)
+    return render(request, 'dashboard.html', {'tickets': tickets})
 
 def home(request):
     return render (request, 'home.html')
@@ -60,4 +68,5 @@ def dashboard(request):
     return render (request, 'dashboard.html')
 
 def customer_dashboard(request):
-    return render (request, 'customer_dashboard.html')
+    tickets = Ticket.objects.filter(author=request.user)
+    return render (request, 'customer_dashboard.html', {'tickets': tickets})

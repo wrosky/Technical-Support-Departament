@@ -3,8 +3,10 @@
 {% block content %}
     <div class="dashboard-header">Dashboard Klienta</div>
     <div class="dashboard-content">
-        <h3>Twoje zgłoszenia</h3>
-        <!-- Lista zgłoszeń klienta -->
-        <a href="{% url 'form' %}" class="dashboard-link">Utwórz zgłoszenie</a>
+        {{ request.user.username }}
+        {% include 'my_tickets.html' %}
+    </div>
+    <div>
+        <a href="{% url 'create_ticket' %}" class="dashboard-link">Utwórz zgłoszenie</a>
     </div>
 {% endblock %}

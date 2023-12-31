@@ -10,7 +10,17 @@ class User(AbstractUser):
         return self.username
     pass
 
-class Submission(models.Model):
+class Ticket(models.Model):
+    STATUS_CHOICES = (
+        ('send', 'Wysłane'),
+        ('open', 'Otwarte'),
+        ('reviewed', 'Ocenione'),
+        ('closed', 'Zamknięte'),
+    )
+
     title = models.CharField(max_length=200)
     description = models.TextField(max_length=1000)
-    image = models.ImageField(upload_to='submissions/')
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='send')
+    created_at = models.DateTimeField(auto_now_add=True)
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    image = models.ImageField(upload_to='images/')

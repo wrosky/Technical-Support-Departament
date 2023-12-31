@@ -1,0 +1,9 @@
+<h2>Moje Zgłoszenia</h2>
+<ul>
+    {% for ticket in tickets %}
+        <li>{{ ticket.title }} - {{ ticket.status }}</li>
+        <!-- Możesz dodać więcej szczegółów o zgłoszeniu -->
+    {% empty %}
+        <li>Brak zgłoszeń.</li>
+    {% endfor %}
+</ul>

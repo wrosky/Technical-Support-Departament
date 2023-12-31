@@ -1,5 +1,5 @@
 from django.contrib.auth.forms import UserCreationForm
-from .models import User, Submission
+from .models import User, Ticket
 from django import forms
 
 class RegisterCustomerForm(UserCreationForm):
@@ -7,7 +7,7 @@ class RegisterCustomerForm(UserCreationForm):
         model = User
         fields = ['email', 'username']
 
-class YourForm(forms.ModelForm):
+class TicketForm(forms.ModelForm):
     class Meta:
-        model = Submission
+        model = Ticket
         fields = ['title', 'description', 'image']
