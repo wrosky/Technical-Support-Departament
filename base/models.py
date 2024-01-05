@@ -1,3 +1,4 @@
+import uuid
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 
@@ -18,6 +19,7 @@ class Ticket(models.Model):
         ('closed', 'Zamknięte'),
     )
 
+    ticket_id = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
     title = models.CharField(max_length=200)
     description = models.TextField(max_length=1000)
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='send')

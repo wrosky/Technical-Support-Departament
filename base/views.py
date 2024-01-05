@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User, Group
@@ -51,6 +51,20 @@ def create_ticket(request):
     return render(request, 'form.html', {'form': form})
 
 @login_required
+def edit_ticket(request, ticket_id):
+    ticket = get_object_or_404(Ticket, id=ticket_id, author=request.user)
+    if request.method == 'POST':
+        form = TicketForm(request.POST, request.FILES, instance=ticket)
+        if form.is_valid():
+            ticket = form.save(commit=False)
+            ticket.author = request.user
+            ticket.save()
+            return redirect('customer_dashboard')
+    else:
+        form = TicketForm(instance=ticket)
+    return render(request, 'edit_ticket.html', {'form': form})
+
+@login_required
 def tickets_list(request):
     tickets = Ticket.objects.filter(author=request.user)
     return render(request, 'dashboard.html', {'tickets': tickets})
@@ -70,3 +84,7 @@ def dashboard(request):
 def customer_dashboard(request):
     tickets = Ticket.objects.filter(author=request.user)
     return render (request, 'customer_dashboard.html', {'tickets': tickets})
+
+def view_ticket(request, uuid):
+    ticket = get_object_or_404(Ticket, ticket_id=uuid)
+    return render (request, 'ticket_details.html', {'ticket': ticket})
