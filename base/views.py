@@ -25,8 +25,12 @@ def login_user(request):
         password = request.POST['password']
         user = authenticate(request, username=username, password=password)
         if user is not None:
-            login(request, user)
-            return redirect('customer_dashboard')
+            if user.is_technik == True:
+                login(request, user)
+                return redirect('technik_dashboard')
+            else:
+                login(request, user)
+                return redirect('customer_dashboard')
         else:
             return render(request, 'home.html', {'error': 'Nieprawidłowa nazwa użytkownika lub hasło'})
     else:
@@ -52,7 +56,7 @@ def create_ticket(request):
 
 @login_required
 def edit_ticket(request, ticket_id):
-    ticket = get_object_or_404(Ticket, id=ticket_id, author=request.user)
+    ticket = get_object_or_404(Ticket, ticket_id=ticket_id, author=request.user)
     if request.method == 'POST':
         form = TicketForm(request.POST, request.FILES, instance=ticket)
         if form.is_valid():
@@ -63,6 +67,15 @@ def edit_ticket(request, ticket_id):
     else:
         form = TicketForm(instance=ticket)
     return render(request, 'edit_ticket.html', {'form': form})
+
+@login_required
+def delete_ticket(request, ticket_id):
+    ticket = get_object_or_404(Ticket, ticket_id=ticket_id, author=request.user)
+    ticket.delete()
+    if request.user.is_technik == True:
+        return redirect('technik_dashboard')
+    else:
+        return redirect('customer_dashboard')
 
 @login_required
 def tickets_list(request):
@@ -84,6 +97,9 @@ def dashboard(request):
 def customer_dashboard(request):
     tickets = Ticket.objects.filter(author=request.user)
     return render (request, 'customer_dashboard.html', {'tickets': tickets})
+
+def technik_dashboard(request):
+    return render (request, 'technik_dashboard.html')
 
 def view_ticket(request, uuid):
     ticket = get_object_or_404(Ticket, ticket_id=uuid)

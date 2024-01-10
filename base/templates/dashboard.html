@@ -15,9 +15,22 @@
             text-align: center;
             position: relative;
         }
+        .user-name {
+            position: absolute;
+            left: 20px;
+            top: 10px;
+        }
         .logout-button {
             position: absolute;
             right: 20px;
+            top: 10px;
+            border: none;
+            background-color: transparent;
+            color: white;
+            cursor: pointer;
+        }
+        .name-button {
+            position: absolute;
             top: 10px;
             border: none;
             background-color: transparent;
@@ -32,7 +45,7 @@
             margin-top: 20px;
         }
         .dashboard-header {
-            background-color: #0056b3;
+            background-color: #007bff;
             color: white;
             padding: 10px;
             border-radius: 4px;
@@ -54,12 +67,40 @@
         .dashboard-link:hover {
             background-color: #0056b3;
         }
+        .ticket-container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+        }
+        .ticket-content {
+            padding: 20px;
+        }
+        .ticket-action-link {
+            display: block;
+            background-color: #007bff;
+            color: white;
+            text-align: center;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+            text-decoration: none;
+        }
+        .ticket-action-link:hover {
+            background-color: #0056b3;
+        }
     </style>
 </head>
 <body>
     <div class="top-bar">
-        Technical Support Department
-        <button type="button" class="logout-button" onclick="location.href='/logout';">Wyloguj się</button>
+        <span class="user-name">Hi, {{ request.user.username }}</span>
+        {% if request.user.is_technik == True %}
+        <a href="{% url 'technik_dashboard' %}" style="color: white; text-decoration:none">Technical Support Department</a>
+        {% else %}
+        <a href="{% url 'customer_dashboard' %}" style="color: white; text-decoration: none;">Technical Support Department</a>
+        {% endif %}
+        <button type="button" class="logout-button" onclick="location.href='/logout';">Log out</button>
     </div>
     <div class="dashboard-container">
         {% block content %}

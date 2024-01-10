@@ -13,10 +13,10 @@ class User(AbstractUser):
 
 class Ticket(models.Model):
     STATUS_CHOICES = (
-        ('send', 'Wysłane'),
-        ('open', 'Otwarte'),
-        ('reviewed', 'Ocenione'),
-        ('closed', 'Zamknięte'),
+        ('Send', 'Wysłane'),
+        ('Open', 'Otwarte'),
+        ('Reviewed', 'Ocenione'),
+        ('Closed', 'Zamknięte'),
     )
 
     ticket_id = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
