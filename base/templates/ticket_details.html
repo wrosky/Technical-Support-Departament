@@ -1,0 +1,16 @@
+{% extends 'dashboard.html' %}
+
+{% block content %}
+<div class="ticket-container">
+    <div class="ticket-content">
+        <p>Autor: {{ ticket.author.username }}</p>
+        <p>Utworzono: {{ ticket.created_at }}</p>
+        <div>
+            <center><p>{{ ticket.title }}</p></center>
+            <center><p>{{ ticket.description }}</p></center>
+        </div>
+        <a href="{% url 'edit_ticket' ticket.ticket_id %}" class="ticket-action-link">Edytuj</a>
+        <a href="{% url 'delete_ticket' ticket.ticket_id %}" class="ticket-action-link" onclick="return confirm('Czy na pewno chcesz usunąć to zgłoszenie?');">Usuń</a>
+    </div>
+</div>
+{% endblock %}

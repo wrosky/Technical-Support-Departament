@@ -1,0 +1,11 @@
+{% extends 'dashboard.html' %}
+
+{% block content %}
+    <div class="dashboard-header">Client Dashboard</div>
+    <div class="dashboard-content">
+        {% include 'my_tickets.html' %}
+    </div>
+    <div>
+        <a href="{% url 'create_ticket' %}" class="dashboard-link">Create form</a>
+    </div>
+{% endblock %}

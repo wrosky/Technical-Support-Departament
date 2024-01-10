@@ -1,0 +1,10 @@
+<h2>My Forms</h2>
+<ul>
+    {% for ticket in tickets %}
+        <li>
+            {{ ticket.title }} - {{ ticket.status }} - <a href="{% url 'view_ticket' ticket.ticket_id %}">Details</a> - <a href="{% url 'delete_ticket' ticket.ticket_id %}" onclick="return confirm('Are you sure you want to delete your form?');">Delete</a>
+        </li>
+    {% empty %}
+        <li>No Forms</li>
+    {% endfor %}
+</ul>
