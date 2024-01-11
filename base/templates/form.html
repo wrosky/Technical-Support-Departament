@@ -6,7 +6,7 @@
     <link rel="stylesheet" href="{% static 'style_form.css' %}" />
 </head>
 <body>
-    <a href="/" class="top-button">Technical Support Department</a>
+    <a href="{% url 'customer_dashboard' %}" class="top-button">Technical Support Department</a>
     <div class="login-container">
         <center><h2>Submit a Form</h2></center>
         <form method="post" action="{% url 'create_ticket' %}" enctype="multipart/form-data">

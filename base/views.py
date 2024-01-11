@@ -48,8 +48,17 @@ def create_ticket(request):
         if form.is_valid():
             ticket = form.save(commit=False)
             ticket.author = request.user
+            techniks = User.objects.filter(is_technik=True)
+            min_tickets_technik = techniks[0]
+            count = float('inf')
+            for technik in techniks:
+                technik_tickets = len(Ticket.objects.filter(technik=technik))
+                if technik_tickets < count:
+                    min_tickets_technik = technik
+                    count = technik_tickets                   
+            ticket.technik = min_tickets_technik 
             ticket.save()
-            return redirect('customer_dashboard')  # Zastąp 'home' nazwą widoku, do którego chcesz przekierować po zapisaniu formularza
+            return redirect('customer_dashboard')
     else:
         form = TicketForm()
     return render(request, 'form.html', {'form': form})
@@ -61,7 +70,7 @@ def edit_ticket(request, ticket_id):
         form = TicketForm(request.POST, request.FILES, instance=ticket)
         if form.is_valid():
             ticket = form.save(commit=False)
-            ticket.author = request.user
+            ticket.author = request.user       
             ticket.save()
             return redirect('customer_dashboard')
     else:
@@ -99,7 +108,8 @@ def customer_dashboard(request):
     return render (request, 'customer_dashboard.html', {'tickets': tickets})
 
 def technik_dashboard(request):
-    return render (request, 'technik_dashboard.html')
+    tickets = Ticket.objects.filter(technik=request.user)
+    return render (request, 'technik_dashboard.html', {'tickets': Ticket.objects.filter(technik=request.user)})
 
 def view_ticket(request, uuid):
     ticket = get_object_or_404(Ticket, ticket_id=uuid)

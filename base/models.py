@@ -4,8 +4,8 @@ from django.contrib.auth.models import AbstractUser
 
 class User(AbstractUser):
     email = models.EmailField(unique=True)
-    is_customer = models.BooleanField(default=True)
-    is_technik = models.BooleanField(default=False)
+    is_customer = models.BooleanField(default=False)
+    is_technik = models.BooleanField(default=True)
 
     def __str__(self):
         return self.username
@@ -25,4 +25,5 @@ class Ticket(models.Model):
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='send')
     created_at = models.DateTimeField(auto_now_add=True)
     author = models.ForeignKey(User, on_delete=models.CASCADE)
+    technik = models.ForeignKey(User, on_delete=models.CASCADE, related_name='technik', null=True, blank=True)
     image = models.ImageField(upload_to='images/')
