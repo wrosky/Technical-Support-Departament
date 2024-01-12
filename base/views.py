@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
+from django.db.models import Q
 from django.http import HttpResponse
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User, Group
@@ -25,7 +26,7 @@ def login_user(request):
         password = request.POST['password']
         user = authenticate(request, username=username, password=password)
         if user is not None:
-            if user.is_technik == True:
+            if user.is_technik == True: # Warunki dla, których użytkownik zostanie przekierowany na odpowiednią stronę
                 login(request, user)
                 return redirect('technik_dashboard')
             else:
@@ -48,7 +49,7 @@ def create_ticket(request):
         if form.is_valid():
             ticket = form.save(commit=False)
             ticket.author = request.user
-            techniks = User.objects.filter(is_technik=True)
+            techniks = User.objects.filter(is_technik=True) # Warunek dla, którego zgłoszenie zostanie przypisane do technika, który ma najmniej zgłoszeń (kod aż do 60 linijki)
             min_tickets_technik = techniks[0]
             count = float('inf')
             for technik in techniks:
@@ -65,7 +66,7 @@ def create_ticket(request):
 
 @login_required
 def edit_ticket(request, ticket_id):
-    ticket = get_object_or_404(Ticket, ticket_id=ticket_id, author=request.user)
+    ticket = get_object_or_404(Ticket, Q(author=request.user) | Q(technik=request.user), ticket_id=ticket_id) # Warunek dla, którego użytkownik może edytować zgłoszenie tylko jeśli jest jego autorem lub technikiem, który je przyjął
     if request.method == 'POST':
         form = TicketForm(request.POST, request.FILES, instance=ticket)
         if form.is_valid():
@@ -82,6 +83,16 @@ def delete_ticket(request, ticket_id):
     ticket = get_object_or_404(Ticket, ticket_id=ticket_id, author=request.user)
     ticket.delete()
     if request.user.is_technik == True:
+        return redirect('technik_dashboard')
+    else:
+        return redirect('customer_dashboard')
+
+@login_required
+def change_ticket_status(request, ticket_id, new_status):
+    ticket = get_object_or_404(Ticket, ticket_id=ticket_id)
+    if request.user.is_technik == True:
+        ticket.status = new_status
+        ticket.save()
         return redirect('technik_dashboard')
     else:
         return redirect('customer_dashboard')

@@ -1,16 +1,65 @@
 {% extends 'dashboard.html' %}
 
 {% block content %}
+<style>
+    .ticket-container {
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        margin-top: 20px;
+    }
+    .ticket-content {
+        margin: auto;
+        max-width: 600px;
+        text-align: center;
+    }
+    .ticket-content h3 {
+        color: #333;
+        margin-bottom: 15px;
+    }
+    .ticket-content p {
+        color: #666;
+        margin-bottom: 10px;
+    }
+    .ticket-action-link {
+        display: inline-block;
+        background-color: #007bff;
+        color: white;
+        text-align: center;
+        padding: 10px 15px;
+        margin: 5px;
+        border-radius: 4px;
+        text-decoration: none;
+        transition: background-color 0.3s;
+    }
+    .ticket-action-link:hover {
+        background-color: #0056b3;
+    }
+    img {
+        max-width: 100%;
+        height: auto;
+        border-radius: 4px;
+    }
+</style>
+
 <div class="ticket-container">
     <div class="ticket-content">
-        <p>Autor: {{ ticket.author.username }}</p>
-        <p>Utworzono: {{ ticket.created_at }}</p>
+        <p>Author: {{ ticket.author.username }}</p>
+        <p>Created at: {{ ticket.created_at }}</p>
         <div>
-            <center><p>{{ ticket.title }}</p></center>
-            <center><p>{{ ticket.description }}</p></center>
+            <h3>Title: {{ ticket.title }}</h3>
+            <p>Description: {{ ticket.description }}</p>
+            <p>{% if ticket.image %}<img src="{{ ticket.image.url }}" alt="Ticket Image">{% endif %}</p>
+            <p>Answer: {{ ticket.answer }}</p>
         </div>
-        <a href="{% url 'edit_ticket' ticket.ticket_id %}" class="ticket-action-link">Edytuj</a>
-        <a href="{% url 'delete_ticket' ticket.ticket_id %}" class="ticket-action-link" onclick="return confirm('Czy na pewno chcesz usunąć to zgłoszenie?');">Usuń</a>
+        <a href="{% url 'edit_ticket' ticket.ticket_id %}" class="ticket-action-link">Edit</a>
+        <a href="{% url 'delete_ticket' ticket.ticket_id %}" class="ticket-action-link" onclick="return confirm('Czy na pewno chcesz usunąć to zgłoszenie?');">Delete</a>
+        {% if request.user.is_technik %}
+            <a href="{% url 'change_ticket_status' ticket.ticket_id 'Open' %}" class="ticket-action-link">Open form</a>
+            <a href="{% url 'change_ticket_status' ticket.ticket_id 'Reviewed' %}" class="ticket-action-link">Review form</a>
+            <a href="{% url 'change_ticket_status' ticket.ticket_id 'Closed' %}" class="ticket-action-link">Close form</a>
+        {% endif %}
     </div>
 </div>
 {% endblock %}

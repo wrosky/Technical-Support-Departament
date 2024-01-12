@@ -1,6 +1,10 @@
-<h2>Edytuj Zgłoszenie</h2>
+{% extends 'dashboard.html' %}
+
+{% block content %}
+<h2>Edit form</h2>
 <form method="post">
     {% csrf_token %}
     {{ form.as_p }}
-    <button type="submit">Zapisz zmiany</button>
+    <button type="submit">Save changes</button>
 </form>
+{% endblock %}
