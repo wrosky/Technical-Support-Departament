@@ -70,10 +70,12 @@ def edit_ticket(request, ticket_id):
     if request.method == 'POST':
         form = TicketForm(request.POST, request.FILES, instance=ticket)
         if form.is_valid():
-            ticket = form.save(commit=False)
-            ticket.author = request.user       
+            ticket = form.save(commit=False)      
             ticket.save()
-            return redirect('customer_dashboard')
+            if request.user.is_technik == True:
+                return redirect('technik_dashboard')
+            else:
+                return redirect('customer_dashboard')
     else:
         form = TicketForm(instance=ticket)
     return render(request, 'edit_ticket.html', {'form': form})

@@ -5,8 +5,8 @@ from django.contrib.auth.models import AbstractUser
 # W modelu User jest opcja stowrzenia użytkownika, który może być albo klientem, albo technikiem
 class User(AbstractUser):
     email = models.EmailField(unique=True)
-    is_customer = models.BooleanField(default=True)
-    is_technik = models.BooleanField(default=False)
+    is_customer = models.BooleanField(default=False)
+    is_technik = models.BooleanField(default=True)
 
     def __str__(self):
         return self.username
