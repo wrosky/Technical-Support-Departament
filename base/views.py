@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.db.models import Q
+from django.db.models import Q, Count
 from django.http import HttpResponse
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User, Group
@@ -100,6 +100,12 @@ def change_ticket_status(request, ticket_id, new_status):
         return redirect('customer_dashboard')
 
 @login_required
+def ticket_stats(request):
+    ticket_stats = Ticket.objects.values('status').annotate(total=Count('status')).order_by('status')
+
+    return render(request, 'ticket_stats.html', {'ticket_stats': ticket_stats})
+
+@login_required
 def tickets_list(request):
     tickets = Ticket.objects.filter(author=request.user)
     return render(request, 'dashboard.html', {'tickets': tickets})
@@ -116,14 +122,17 @@ def form(request):
 def dashboard(request):
     return render (request, 'dashboard.html')
 
+@login_required
 def customer_dashboard(request):
     tickets = Ticket.objects.filter(author=request.user)
     return render (request, 'customer_dashboard.html', {'tickets': tickets})
 
+@login_required
 def technik_dashboard(request):
     tickets = Ticket.objects.filter(technik=request.user)
     return render (request, 'technik_dashboard.html', {'tickets': Ticket.objects.filter(technik=request.user)})
 
+@login_required
 def view_ticket(request, uuid):
     ticket = get_object_or_404(Ticket, ticket_id=uuid)
     return render (request, 'ticket_details.html', {'ticket': ticket})

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Statystyki Zgłoszeń</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+    </style>
+</head>
+<body>
+    <h2>Statystyki Zgłoszeń</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Status</th>
+                <th>Ilość Zgłoszeń</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for stat in ticket_stats %}
+                <tr>
+                    <td>{{ stat.status }}</td>
+                    <td>{{ stat.total }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

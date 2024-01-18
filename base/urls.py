@@ -19,6 +19,7 @@ urlpatterns = [
     path('dashboard/', views.dashboard, name = 'dashboard'),
     path('customer_dashboard/', views.customer_dashboard, name = 'customer_dashboard'),
     path('technik_dashboard/', views.technik_dashboard, name = 'technik_dashboard'),
+    path('ticket_stats/', views.ticket_stats, name = 'ticket_stats'),
 ]
 
 # Warunki dla zczytytywania plików statycznych
